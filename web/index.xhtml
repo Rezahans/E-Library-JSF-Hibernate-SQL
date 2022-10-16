@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>RFLibrary</title>
+    <link rel="icon" type="image/png" href="assets/image/libico.png" />
+    <style>
+body {
+    height: 100%;
+    margin: 0;
+}
+.page-holder {
+    min-height: 100vh;
+}
+.bg-cover {
+    background-size: cover !important;
+}
+html {
+    min-height: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: relative;
+}
+div.bacabuku {
+    margin: 0 auto;
+    display: block;
+}
+#myFrame { 
+    width:100%; height:800px; 
+}
+footer.inifooter {
+    position: absolute; 
+    bottom: 0;
+}
+    </style>
+</h:head>
+<h:body>
+<div style="background: url('assets/image/library.jpg')" class="page-holder bg-cover">
+<b:navBar brand="RF Library" brandHref="#" fluid="true" inverse="true" 
+position="top" sticky="true">
+   <b:navbarLinks  styleClass="hidden-xs">
+  </b:navbarLinks>
+  <b:navbarLinks pull="right">
+    <b:navLink  value="Login" href="#lgnmodal" onclick="$('.lgnmdl').modal()" style="color: crimson;"></b:navLink>
+  </b:navbarLinks>
+  
+</b:navBar>
+    
+<b:modal id="lgnmodal" title="LIBRARIAN LOGIN" styleClass="lgnmdl">
+    <center>
+        <img src="assets/image/logo.png" alt="Book #{u.judul}" width="100%" style="margin-bottom: 70px;"/>
+    </center>
+  <b:form horizontal="true">
+      <b:inputText placeholder="Librarian Username" label="Username:" colMd="10" labelColMd="2" class="cred" value="#{fdwi.username}" validatorMessage="PLEASE INPUT THE USERNAME!!">
+    <f:facet name="prepend">
+      <b:icon name="user" />
+    </f:facet>
+  <f:validateRequired/> 
+  </b:inputText>
+      <b:inputSecret placeholder="Librarian Password" label="Password:" colMd="10" labelColMd="2" class="cred" value="#{fdwi.password}" validatorMessage="PLEASE INPUT THE PASSWORD!!" >
+    <f:facet name="prepend">
+      <b:iconAwesome name="key" />
+    </f:facet>
+  <f:validateRequired/> 
+  </b:inputSecret>
+      <div style="margin-bottom: 50px;"></div>
+  <b:panelGrid columns="2" size="sm" >
+  <b:button look="danger" value="Reset" onclick="$('.cred').val('');return false;" iconAwesome="recycle" tooltip-position="right" span="12" style="margin: 10px;"/>
+  <b:commandButton action="#{fdwi.login_user()}" tooltip-position="right" span="12"
+    value="Login" class="btn btn-success" style="margin: 10px;" ></b:commandButton>
+  </b:panelGrid>
+ </b:form>
+  <f:facet name="footer">    
+    <b:button value="Cancel" dismiss="modal" />
+  </f:facet>
+</b:modal>
+<center>
+    <div class="header">
+        <img src="assets/image/logo.png" alt="Book #{u.judul}" width="250px" style="margin-bottom: 70px; margin-top: 100px;"/>
+    </div>
+
+    <b:messages/>
+<br></br>
+ <b:row>
+     <ui:repeat var="u" value="#{lib.getAllRecords()}">
+  <b:column col-sm="3" col-md="3">
+    <b:thumbnail>
+      <img src="https://drive.google.com/thumbnail?id=#{u.img}" alt="Book #{u.judul}" width="175"/>
+      <h6>BOOK ID: <h:outputText value="RF-#{u.id}"/></h6>
+      <br></br>
+      <f:facet name="caption" >
+        <h4><b>Title: </b><h:outputText value="#{u.judul}"/></h4>
+        <h4><b>Writer: </b><h:outputText value="#{u.penulis}"/></h4>
+        <h4><b>Genre: </b><h:outputText value="#{u.genre}"/></h4>
+        <table class="table table-bordered table-striped text-center justify-content-center">
+            <tr>
+                <td>
+                  <a id="bread#{u.id}" class="btn btn-primary btn-md" href="#"  onclick="$('.read#{u.id}').modal()">Preview/Read</a>
+                </td>
+                <td>
+                    <a id="bdl#{u.id}" class="btn btn-success btn-md" href="#{u.getgLink()}#{u.link}" onclick="return confirm('Do You Want To Download Book \n #{u.judul} ?');">Download</a>
+                </td>
+            </tr>
+        </table>
+      </f:facet>
+    </b:thumbnail>
+  </b:column>
+<b:modal id="read#{u.id}" title="#{u.judul}" styleClass="read#{u.id}">
+    <div class="bacabuku">
+       <iframe id="myFrame" class="bacabuku" src="https://drive.google.com/file/d/#{u.link}/preview" allow="autoplay" frameborder="0"></iframe>
+    </div>
+</b:modal>
+         </ui:repeat>   
+</b:row>
+</center>
+</div>
+<footer class="page-footer bg-gr" style="background-color: gray;">
+  <div class="text-center py-3 bg-gr text-light " style="background-color: gray; color: white; " bottom="0">
+      2022 <span> | </span> <img src='assets/image/libico.png' width='25' height='25' class='d-inline-block align-bottom' alt='ico'/>RF - Library<br/>
+  </div>
+</footer>
+</h:body>
+</html>

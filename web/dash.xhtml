@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://bootsfaces.net/ui" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dash RFLibrary - #{fdwi.name}</title>
+	<link rel="icon" type="image/png" href="assets/image/libico.png" />
+    <style>
+body {
+    height: 100%;
+   margin:0;
+   padding:0;
+    background-color: gray;
+}
+.page-holder {
+    min-height: 100vh;
+}
+.bg-cover {
+    background-size: cover !important;
+}
+html {
+    min-height: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: relative;
+    margin:0;
+    padding:0;
+}
+div.bacabuku {
+    margin: 0 auto;
+    display: block;
+}
+#myFrame { 
+    width:100%; height:800px; 
+}
+footer.inifooter {
+    position: absolute; 
+    bottom: 0;
+}
+    </style>
+</h:head>
+<h:body>
+    <div style="background: url('assets/image/library.jpg')" class="page-holder bg-cover">
+<center>     
+ <b:panel>
+  <f:facet name="heading">
+    <i class="fa user" style="padding-right:20px" />
+    <h:outputText value="RF - DASHBOARD" />
+  </f:facet>
+     <h2 class="mt-3">Welcome to RF-Library Admin Area</h2>
+  <table class="table table-bordered table-striped text-center justify-content-center">
+        <tr>
+            <td>
+                <b:form>
+                   <a id="addbook" class="btn btn-success btn-md" href="#"  onclick="$('.addbookmdl').modal()">Add New Book</a>                     
+		</b:form>
+            </td>
+            <td>
+                <b:form>
+                    <b:commandButton action="#{fdwi.logout()}" value="Logout" look="danger" onclick="return confirm('Hey Do You Want To Logout ?');"></b:commandButton>                         
+		</b:form>
+            </td>
+        </tr>
+    </table>
+</b:panel> 
+
+    <b:messages/>
+ <b:modal id="addbookmdl" title="ADD NEW BOOK" styleClass="addbookmdl">
+  <b:form horizontal="true">
+      <b:inputText placeholder="Book Title" label="Book Title:" colMd="10" labelColMd="2" class="cred" value="#{lib.judul}" validatorMessage="PLEASE INPUT THE TITLE">
+    <f:facet name="prepend">
+      <b:icon name="book" />
+    </f:facet>
+  <f:validateRequired/> 
+  </b:inputText>
+  <b:inputText placeholder="Book Writer" label="Book Writer:" colMd="10" labelColMd="2" class="cred" value="#{lib.penulis}" validatorMessage="PLEASE INPUT THE WRITER">
+    <f:facet name="prepend">
+      <b:iconAwesome name="user" />
+    </f:facet>
+  <f:validateRequired/> 
+  </b:inputText>
+  <b:inputText placeholder="Book Genre" label="Book Genre:" colMd="10" labelColMd="2" class="cred" value="#{lib.genre}" validatorMessage="PLEASE INPUT THE GENRE">
+    <f:facet name="prepend">
+      <b:iconAwesome name="certificate" />
+    </f:facet>
+  <f:validateRequired/> 
+  </b:inputText>
+  <b:inputText placeholder="Book Image Link (GOOGLE DRIVE)" label="Image Link:" colMd="10" labelColMd="2" class="cred" value="#{lib.img}" validatorMessage="PLEASE INPUT THE IMAGE LINK">
+    <f:facet name="prepend">
+      <b:iconAwesome name="link" />
+    </f:facet>
+  <f:validateRequired/> 
+  </b:inputText>
+  <b:inputText placeholder="Book PDF Link (GOOGLE DRIVE)" label="PDF Link:" colMd="10" labelColMd="2" class="cred" value="#{lib.link}" validatorMessage="PLEASE INPUT THE PDF LINK">
+    <f:facet name="prepend">
+      <b:iconAwesome name="link" />
+    </f:facet>
+  <f:validateRequired/> 
+  </b:inputText>
+  <b:panelGrid columns="2" size="sm" >
+  <b:button look="danger" value="Reset" onclick="$('.cred').val('');return false;" iconAwesome="recycle" tooltip-position="right" span="12"/>
+  <b:commandButton action="#{lib.saveLib()}" tooltip-position="right" span="12"
+    value="Save Book" class="btn btn-success" ></b:commandButton>
+  </b:panelGrid>
+ </b:form>
+  <f:facet name="footer">    
+    <b:button value="Cancel" dismiss="modal" />
+  </f:facet>
+</b:modal>   
+     
+    
+    <br></br>
+        <b:row>
+     <ui:repeat var="u" value="#{lib.getAllRecords()}">
+  <b:column col-sm="3" col-md="3">
+    <b:thumbnail>
+      <img src="https://drive.google.com/thumbnail?id=#{u.img}" alt="Book #{u.judul}" width="175"/>
+      <h6>BOOK ID: <h:outputText value="RF-#{u.id}"/></h6>
+      <br></br>
+      <f:facet name="caption" >
+        <h4><b>Title: </b><h:outputText value="#{u.judul}"/></h4>
+        <h4><b>Writer: </b><h:outputText value="#{u.penulis}"/></h4>
+        <h4><b>Genre: </b><h:outputText value="#{u.genre}"/></h4>
+        <table class="table table-bordered table-striped text-center justify-content-center">
+            <tr>
+                <td>
+                  <a id="bread#{u.id}" class="btn btn-primary btn-md" href="#"  onclick="$('.read#{u.id}').modal()">Preview/Read</a>
+                </td>
+                <td>
+                    <a id="bdl#{u.id}" class="btn btn-success btn-md" href="#{u.getgLink()}#{u.link}" onclick="return confirm('Do You Want To Download Book \n #{u.judul} ?');">Download</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                  <b:form>
+                      <b:commandButton action="#{lib.getById(u.id)}" value="Edit" look="info"></b:commandButton>
+                  </b:form>
+                </td>
+                <td>
+                  <b:form>
+                      <b:commandButton action="#{lib.deleteLib(u.id)}" value="Delete" look="danger" onclick="return confirm('Hey #{fdwi.username} Do You Want To Delete This (#{u.judul}) Book ?');"></b:commandButton>
+                  </b:form>
+                </td>
+            </tr>
+        </table>
+      </f:facet>
+    </b:thumbnail>
+  </b:column>
+<b:modal id="read#{u.id}" title="#{u.judul}" styleClass="read#{u.id}">
+    <div class="bacabuku">
+       <iframe id="myFrame" class="bacabuku" src="https://drive.google.com/file/d/#{u.link}/preview" allow="autoplay" frameborder="0"></iframe>
+    </div>
+</b:modal>
+         </ui:repeat>   
+</b:row>
+</center>
+</div>
+<footer class="page-footer" style="background-color: gray;" >
+  <div class="text-center py-3 bg-gr text-light " style="background-color: gray; color: white;" bottom="0">
+      2022 <span> | </span> <img src='assets/image/libico.png' width='25' height='25' class='d-inline-block align-bottom' alt='ico'/>RF - Library<br/>
+  </div>
+</footer>
+</h:body>
+</html>
